@@ -32,7 +32,7 @@
     "test:watch": "jest --watch",
     "test:prod": "npm run test -- --coverage --no-cache",
     "coverage": "cat ./coverage/lcov.info | coveralls",
-    "preversion": "npm run test:prod && npm run build && (git add .) && git commit -m tests-and-build.",
+    "preversion": "npm run test:prod && npm run build && (git add .) && git commit --no-verify -m tests-and-build.",
     "patch": "npm version patch && npm publish && git push",
     "minor": "npm version minor && npm publish && git push",
     "major": "npm version major && npm publish && git push"
