@@ -23,5 +23,5 @@ function mapTypes(input, FieldMap) {
     return result;
 }
 
-export default mapTypes;
+export { mapTypes };
 //# sourceMappingURL=parakeet-mapper.es.js.map

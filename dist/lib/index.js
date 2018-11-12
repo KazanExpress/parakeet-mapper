@@ -24,6 +24,6 @@ function mapTypes(input, FieldMap) {
     }
     return result;
 }
-exports.default = mapTypes;
+exports.mapTypes = mapTypes;
 ;
 //# sourceMappingURL=index.js.map

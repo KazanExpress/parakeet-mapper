@@ -26,7 +26,7 @@ var parakeetMapper = (function (exports) {
       return result;
   }
 
-  exports.default = mapTypes;
+  exports.mapTypes = mapTypes;
 
   return exports;
 

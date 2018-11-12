@@ -29,7 +29,7 @@
       return result;
   }
 
-  exports.default = mapTypes;
+  exports.mapTypes = mapTypes;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
