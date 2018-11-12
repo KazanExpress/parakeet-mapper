@@ -6,6 +6,7 @@ import { uglify } from 'rollup-plugin-uglify';
 import json from 'rollup-plugin-json';
 
 const libName = 'parakeet-mapper';
+const varName = 'parakeetMapper';
 const input = `src/index.ts`;
 const output = format => `dist/${libName}.${format}.js`;
 const common = target => ({
@@ -45,8 +46,8 @@ export default [
     input,
     output: [
       { file: output('es5'), format: 'cjs', sourcemap: true, exports: 'named' },
-      { file: output('umd'), format: 'umd', sourcemap: true, name: libName, exports: 'named' },
-      { file: output('iife'), format: 'iife', sourcemap: true, name: libName, exports: 'named' },
+      { file: output('umd'), format: 'umd', sourcemap: true, name: varName, exports: 'named' },
+      { file: output('iife'), format: 'iife', sourcemap: true, name: varName, exports: 'named' },
     ],
     ...common('es5')
   },
