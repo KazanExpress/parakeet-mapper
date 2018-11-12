@@ -1,4 +1,4 @@
-import mapTypes from '../src';
+import { mapTypes } from '../src';
 
 const podguznikFromList: ProductListItem = {
   title: 'Podguznik',

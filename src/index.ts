@@ -1,4 +1,4 @@
-export default function mapTypes<
+export function mapTypes<
   I extends object,
   O extends object,
 >(input: I, FieldMap: TypeMap<Partial<I>, Partial<O>>): O {
