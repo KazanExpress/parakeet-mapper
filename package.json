@@ -10,10 +10,20 @@
     "src",
     "dist"
   ],
+  "description": "Simple data converter",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KazanExpress/parakeet-mapper.git"
+  },
+  "bugs": {
+    "url": "https://github.com/KazanExpress/parakeet-mapper/issues"
+  },
+  "homepage": "https://github.com/KazanExpress/parakeet-mapper#readme",
   "license": "MIT",
   "engines": {
     "node": ">=8.0.0"
   },
+  "author": "KazanExpress",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "tsc --module commonjs && rollup -c rollup.config.ts",
