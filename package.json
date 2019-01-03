@@ -8,6 +8,7 @@
   "typings": "dist/types/parakeet-mapper.d.ts",
   "files": [
     "src",
+    "index.ts",
     "dist"
   ],
   "description": "Simple data converter",
