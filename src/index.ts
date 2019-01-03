@@ -2,7 +2,7 @@ export function mapFactory<
   I extends object,
   O extends object
 >(FieldMap: TypeMap<I, O>): (input: I) => O {
-  return (input: I) => {
+  return function (input: I) {
     if (
       !FieldMap ||
       Array.isArray(FieldMap) ||
