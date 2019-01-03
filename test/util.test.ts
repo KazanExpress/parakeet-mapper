@@ -1,4 +1,4 @@
-import { mapTypes } from '../src';
+import { mapTypes, mapFactory } from '../src';
 
 const podguznikFromList: ProductListItem = {
   title: 'Podguznik',
@@ -13,7 +13,7 @@ const podguznikFromList: ProductListItem = {
   sellPrice: 1300
 };
 
-describe('MyLib', () => {
+describe('parakeet-mapper', () => {
   it('maps to an empty object with empty map', () => {
     let result = mapTypes<ProductListItem, Product>(podguznikFromList, {});
     expect(result).toEqual({});
@@ -55,6 +55,64 @@ describe('MyLib', () => {
     });
   });
 });
+
+
+describe('parakeet-mapper factory', () => {
+
+  it('maps to an empty object with empty map', () => {
+    const map = mapFactory<ProductListItem, Product>({});
+
+    let result = map(podguznikFromList);
+
+    expect(result).toEqual({});
+  });
+
+  it('maps boolean fields', () => {
+    const map = mapFactory<ProductListItem, Product>({
+      skuId: false,
+      title: true
+    });
+
+    let result = map(podguznikFromList);
+
+    expect(result).toEqual({
+      title: 'Podguznik'
+    });
+  });
+
+  it('maps string fields', () => {
+    const map = mapFactory<ProductListItem, Product>({
+      id: 'productId'
+    });
+
+    let result = map(podguznikFromList);
+
+    expect(result).toEqual({
+      id: 54213
+    });
+  });
+
+  it('maps fields with custom mappers', () => {
+    const map = mapFactory<ProductListItem, Product>({
+      images: v => [v.image],
+      ratingInfo: v => ({
+        feedbackQuantity: '0',
+        rating: String(v.rating)
+      })
+    });
+
+    let result = map(podguznikFromList);
+
+    expect(result).toEqual({
+      images: ['tygjhjkqw89786dtsugyh'],
+      ratingInfo: {
+        feedbackQuantity: '0',
+        rating: '4.5'
+      }
+    });
+  });
+});
+
 
 interface Product {
   id: number;
