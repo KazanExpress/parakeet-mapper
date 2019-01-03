@@ -1,6 +1,6 @@
 {
   "name": "parakeet-mapper",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "keywords": [],
   "main": "dist/lib/index.js",
   "module": "dist/parakeet-mapper.es.js",
