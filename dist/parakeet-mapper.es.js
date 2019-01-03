@@ -1,5 +1,5 @@
 function mapFactory(FieldMap) {
-    return (input) => {
+    return function (input) {
         if (!FieldMap ||
             Array.isArray(FieldMap) ||
             !Object.keys(FieldMap).length) {
