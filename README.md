@@ -157,6 +157,8 @@ inputObject  | Object        | Input object
 
 ## Factory mode
 
+> **new** in v1.1.0
+
 It's also possible to create mappers using `mapFactory`:
 ```ts
 import { mapFactory } from 'parakeet-mapper';
