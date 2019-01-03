@@ -33,8 +33,8 @@ export function mapTypes<
 };
 
 export type TypeMap<
-  I extends object,
-  O extends object
+  I extends object = any,
+  O extends object = any
 > = {
   /**
    * if has function - map by funciton
