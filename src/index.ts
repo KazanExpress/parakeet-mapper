@@ -1,7 +1,7 @@
 export function mapTypes<
   I extends object,
   O extends object,
->(input: I, FieldMap: TypeMap<Partial<I>, Partial<O>>): O {
+>(input: I, FieldMap: TypeMap<I, O>): O {
   if (
     !FieldMap ||
     Array.isArray(FieldMap) ||
@@ -41,5 +41,5 @@ export type TypeMap<
    * if true - map straight without changes
    * if false - do not map
    */
-    [key in keyof O]: boolean | keyof I | ((obj: I) => O[key]);
+    [key in keyof Partial<O>]: boolean | keyof Partial<I> | ((obj: I) => O[key]);
 };
