@@ -154,3 +154,43 @@ FieldMap     | Object        | Set of rules for a mapper
 argument     | type          | description
 -------------|---------------|--------------
 inputObject  | Object        | Input object
+
+## Factory mode
+
+It's also possible to create mappers using `mapFactory`:
+```ts
+import { mapFactory } from 'parakeet-mapper';
+
+const productMapper = mapFactory({
+  title: true,
+  url: true,
+  isFavorite: true,
+  fullPrice: true,
+  purchasePrice: 'sellPrice',
+  id: 'productId',
+  images: v => [v.image],
+  ratingInfo: v => ({
+    ordersQuantity: v.ordersQuantity,
+    rating: String(v.rating)
+  })
+});
+```
+
+```ts
+const result = productMapper(podguznikFromServer);
+
+// results in:
+{
+  fullPrice: 1500,
+  id: 54213,
+  images: ["tygjhjkqw89786dtsugyh"],
+  isFavorite: true,
+  purchasePrice: 1300,
+  ratingInfo: [object Object] {
+    ordersQuantity: 83,
+    rating: "4.5"
+  },
+  title: "Podguznik",
+  url: "/podguznik-54213"
+}
+```
