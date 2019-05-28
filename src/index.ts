@@ -36,7 +36,7 @@ export function mapFactory<
 
 export function mapTypes<
   I extends object,
-  O extends object,
+  O extends object
 >(input: I, FieldMap: TypeMap<I, O>): O {
   return mapFactory(FieldMap)(input);
 }
