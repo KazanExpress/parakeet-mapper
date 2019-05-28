@@ -23,10 +23,10 @@ For more options see [installation](#installation)
 
 ## Features
 
-The main feature is a possibility to specify a set of rules to convert one structure to another.
+The main feature is a possibility to specify a set of rules to convert one type structure to another.
 
 Additional features:
-
+* It's small
 * It just works
 
 ---
@@ -43,18 +43,16 @@ yarn add parakeet-mapper
 
 ### Import and use
 
-There is only one method `mapTypes` and you can use it!
-
 **ES**
 
 ```js
-import { mapTypes } from 'parakeet-mapper'
+import { mapTypes, mapFactory } from 'parakeet-mapper'
 ```
 
 **CommonJS**
 
 ```js
-const { mapTypes } = require('parakeet-mapper');
+const { mapTypes, , mapFactory } = require('parakeet-mapper');
 ```
 
 **Script tag**
@@ -67,7 +65,7 @@ const { mapTypes } = require('parakeet-mapper');
 <script>
   // global variable parakeetMapper
 
-  const { mapTypes } = parakeetMapper;
+  const { mapTypes, mapFactory } = parakeetMapper;
 </script>
 ```
 
