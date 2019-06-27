@@ -58,7 +58,6 @@ describe('parakeet-mapper', () => {
 
 
 describe('parakeet-mapper factory', () => {
-
   it('maps to an empty object with empty map', () => {
     const map = mapFactory<ProductListItem, Product>({});
 
@@ -110,6 +109,19 @@ describe('parakeet-mapper factory', () => {
         rating: '4.5'
       }
     });
+  });
+
+  it('applies converters', () => {
+    const map = mapFactory<ProductListItem, Product>({
+      id: 'productId'
+    });
+
+    const withStringId = map(podguznikFromList, {
+      id: String
+    });
+
+    expect(withStringId).toHaveProperty('id');
+    expect(typeof withStringId.id).toBe('string');
   });
 });
 
