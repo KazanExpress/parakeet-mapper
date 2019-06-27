@@ -4,9 +4,9 @@ type ConverterMap<O> = {
 
 type ConvertedMap<
   O extends object,
-  CM extends ConverterMap<O>
+  CM extends ConverterMap<O> = never
 > = {
-  [key in keyof O]: key extends keyof CM ? ReturnType<CM[key]> : O[key]
+  [key in keyof O]: key extends keyof CM ? CM extends [never] ? O[key] : ReturnType<CM[key]> : O[key]
 };
 
 export function mapFactory<
@@ -28,16 +28,16 @@ export function mapFactory<
   I extends object,
   O extends object,
 >(FieldMap: TypeMap<I, O>) {
-  return function <CM extends ConverterMap<O>>(
+  return function <CM extends ConverterMap<O> = never>(
     input: I,
     converters?: CM
-  ): O | ConvertedMap<O, CM> {
+  ): ConvertedMap<O, CM> {
     if (
       !FieldMap ||
       Array.isArray(FieldMap) ||
       !Object.keys(FieldMap).length
     ) {
-      return {} as O;
+      return {} as ConvertedMap<O, CM>;
     }
 
     const convert = converters ? (key: string, value: any) => (
@@ -63,7 +63,7 @@ export function mapFactory<
       }
     }
 
-    return result as O;
+    return result as ConvertedMap<O, CM>;
   };
 }
 
@@ -71,7 +71,7 @@ export function mapTypes<
   I extends object,
   O extends object
 >(input: I, FieldMap: TypeMap<I, O>): O {
-  return mapFactory(FieldMap)(input);
+  return mapFactory(FieldMap)(input) as O;
 }
 
 export type TypeMap<
@@ -83,5 +83,5 @@ export type TypeMap<
    * if true - map straight without changes
    * if false - do not map
    */
-    [key in keyof Partial<O>]: boolean | keyof Partial<I> | ((obj: I) => O[key]);
+  [key in keyof Partial<O>]: boolean | keyof Partial<I> | ((obj: I) => O[key]);
 };
