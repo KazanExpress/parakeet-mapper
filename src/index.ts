@@ -22,6 +22,14 @@ export function mapFactory<
     input: I,
     converters: CM
   ): ConvertedMap<O, CM>;
+
+  /**
+   * Safe net for other types
+   */
+  (
+    input: I,
+    converters: number | string | boolean | null | undefined
+  ): O;
 };
 
 export function mapFactory<
