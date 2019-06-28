@@ -1,8 +1,8 @@
-type ConverterMap<O> = {
+export type ConverterMap<O> = {
   [key in keyof Partial<O>]: (i: O[key]) => any;
 };
 
-type ConvertedMap<
+export type ConvertedMap<
   O extends object,
   CM extends ConverterMap<O> = never
 > = {
