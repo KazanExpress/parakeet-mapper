@@ -10,6 +10,10 @@ export declare function mapFactory<I extends object, O extends object>(FieldMap:
      * @param converters - a map of resulting value converters
      */
     <CM extends ConverterMap<O>>(input: I, converters: CM): ConvertedMap<O, CM>;
+    /**
+     * Safe net for other types
+     */
+    (input: I, converters: number | string | boolean | null | undefined): O;
 };
 export declare function mapTypes<I extends object, O extends object>(input: I, FieldMap: TypeMap<I, O>): O;
 export declare type TypeMap<I extends object = any, O extends object = any> = {
