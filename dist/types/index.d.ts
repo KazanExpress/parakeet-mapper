@@ -1,7 +1,7 @@
-declare type ConverterMap<O> = {
+export declare type ConverterMap<O> = {
     [key in keyof Partial<O>]: (i: O[key]) => any;
 };
-declare type ConvertedMap<O extends object, CM extends ConverterMap<O> = never> = {
+export declare type ConvertedMap<O extends object, CM extends ConverterMap<O> = never> = {
     [key in keyof O]: key extends keyof CM ? CM extends [never] ? O[key] : ReturnType<CM[key]> : O[key];
 };
 export declare function mapFactory<I extends object, O extends object>(FieldMap: TypeMap<I, O>): {
@@ -15,4 +15,3 @@ export declare function mapTypes<I extends object, O extends object>(input: I, F
 export declare type TypeMap<I extends object = any, O extends object = any> = {
     [key in keyof Partial<O>]: boolean | keyof Partial<I> | ((obj: I) => O[key]);
 };
-export {};
