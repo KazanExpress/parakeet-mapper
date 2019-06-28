@@ -33,7 +33,7 @@
     "test:watch": "jest --watch",
     "test:prod": "npm run test -- --coverage --no-cache",
     "coverage": "cat ./coverage/lcov.info | coveralls",
-    "commit-build": "git diff --quiet && git diff --staged --quiet || (git add . && git commit -m 'Update dist')",
+    "commit-build": "(git diff --quiet && git diff --staged --quiet) || (git add . && git commit -m \"Update dist\")",
     "preversion": "npm run test:prod && npm run build && npm run commit-build",
     "patch": "npm version patch && npm publish && git push",
     "minor": "npm version minor && npm publish && git push",
