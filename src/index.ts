@@ -1,95 +1,46 @@
-export type ConverterMap<O> = {
-  [key in keyof Partial<O>]: (i: O[key]) => any;
-};
-
-export type ConvertedMap<
-  O extends object,
-  CM extends ConverterMap<O> = never
-> = {
-  [key in keyof O]: key extends keyof CM ? CM extends [never] ? O[key] : ReturnType<CM[key]> : O[key]
-};
-
-export function mapFactory<
-  I extends object,
-  O extends object
->(FieldMap: TypeMap<I, O>): {
-  (input: I): O;
-
-  /**
-   * @param converters - a map of resulting value converters
-   */
-  <CM extends ConverterMap<O>>(
-    input: I,
-    converters: CM
-  ): ConvertedMap<O, CM>;
-
-  /**
-   * Safe net for other types
-   */
-  (
-    input: I,
-    converters: number | string | boolean | null | undefined
-  ): O;
-};
-
-export function mapFactory<
+export declare function mapFactory<
   I extends object,
   O extends object,
->(FieldMap: TypeMap<I, O>) {
-  return function <CM extends ConverterMap<O> = never>(
-    input: I,
-    converters?: CM
-  ): ConvertedMap<O, CM> {
-    if (
-      !FieldMap ||
-      Array.isArray(FieldMap) ||
-      !Object.keys(FieldMap).length
-    ) {
-      return {} as ConvertedMap<O, CM>;
-    }
+  F extends TypeMap<I, O> | TypeMapFactory<I, O> = TypeMap<I, O>,
+  P extends any[] = F extends TypeMapFactory<I, O, infer U> ? U : never[]
+>(fieldMap: F): Converter<I, O, P>;
 
-    const convert = converters ? (key: string, value: any) => (
-      typeof converters[key] === 'function' ? converters[key](value) : value
-    ) : (_key: string, value: any) => value;
+export type Converter<
+  Input extends any = any,
+  Output extends any = any,
+  Params extends any[] = never[]
+> = Params extends never[] ? (input: Input) => Output
+  : (input: Input, ...params: Params) => Output;
 
-    const result: Partial<O> = {};
-    for (const key in FieldMap) {
-      if (typeof FieldMap[key] === 'boolean' && FieldMap[key]) {
-        result[key] = convert(key, input[key as string] as any);
-        continue;
-      }
+export type EitherField<
+  T extends object,
+  TKey extends keyof T = keyof T
+> = TKey extends keyof T ? {
+  [P in TKey]-?: T[TKey]
+} & Partial<Record<Exclude<keyof T, TKey>, never>> : never;
 
-      if (typeof FieldMap[key] === 'string') {
-        result[key] = convert(key, input[FieldMap[key as string]] as any);
-        continue;
-      }
-
-      if (typeof FieldMap[key] === 'function') {
-        let mapperValue = (FieldMap[key] as Function)(input);
-        result[key] = convert(key, mapperValue);
-        continue;
-      }
-    }
-
-    return result as ConvertedMap<O, CM>;
-  };
-}
-
-export function mapTypes<
+export type PropertyMapper<
   I extends object,
-  O extends object
->(input: I, FieldMap: TypeMap<I, O>): O {
-  return mapFactory(FieldMap)(input) as O;
-}
+  O extends object,
+  key extends keyof O
+> = EitherField<{ [IKey in keyof I]?: Converter<I[IKey], O[key]> }>;
 
 export type TypeMap<
   I extends object = any,
   O extends object = any
 > = {
   /**
-   * if has function - map by funciton
    * if true - map straight without changes
    * if false - do not map
+   * if string - map from the according key
+   * if object - map from key in the object using mapper from the value
+   * if function - map by funciton from the original object
    */
-  [key in keyof Partial<O>]: boolean | keyof Partial<I> | ((obj: I) => O[key]);
+  [key in keyof O]?: boolean | keyof I | Converter<I, O[key]> | PropertyMapper<I, O, key>;
 };
+
+export type TypeMapFactory<
+  I extends object = any,
+  O extends object = any,
+  P extends any[] = never[]
+> = (...params: P) => TypeMap<I, O>;
