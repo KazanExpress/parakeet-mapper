@@ -11,34 +11,22 @@ import {
 export function mapFactory<
   I extends object,
   O extends object,
->(fieldMap: TypeMap<I, O>): (
-  | Converter<I, O>
-  & Converter<I[], O[]>
-  & Converter<I | I[], O | O[]>
-);
+>(fieldMap: TypeMap<I, O>): Converter<I, O>;
 
 export function mapFactory<
   I extends object
 >(): <
   F extends TypeMap<I, any>,
   O extends object = InferOutput<I, F>
->(fieldMap: F) => (
-  | Converter<I, O>
-  & Converter<I[], O[]>
-  & Converter<I | I[], O | O[]>
-);
+>(fieldMap: F) => Converter<I, O>;
 
 export function mapFactory<
   I extends object,
   O extends object
 >(): <
   F extends TypeMap<I, O>,
-  Output extends object = InferOutput<I, F>
->(fieldMap: F) => (
-  | Converter<I, Output>
-  & Converter<I[], Output[]>
-  & Converter<I | I[], Output | Output[]>
-);
+  RealO extends object = InferOutput<I, F, O>
+>(fieldMap: F) => Converter<I, RealO>;
 
 export function mapFactory<
   I extends object,
@@ -48,41 +36,34 @@ export function mapFactory<
     return mapFactory;
   }
 
-  const empty = {} as O;
-
-  function map(input: I): O;
-  function map(input: I[]): O[];
-  function map(input: I | I[]): O | O[] {
-    if (Array.isArray(input)) {
-      return input.map(_ => map(_));
-    }
+  return function (input: I): O {
+    const empty = {} as O;
 
     if (!fieldMap || !Object.keys(fieldMap).length) {
       return empty;
     }
 
-    const keys = typedKeyOf(fieldMap);
+    return typedKeyOf(fieldMap)
+      .reduce((result, key) => {
+        const value = fieldMap[key];
 
-    return keys.reduce((result, key) => {
-      const value = fieldMap[key];
+        if (isFlag(value) && value) {
+          result[key] = input[key as string];
+        }
+        else if (isPropKey(value)) {
+          result[key] = input[value];
+        }
+        else if (isConverter<I, O[keyof O]>(value)) {
+          result[key] = value(input);
+        }
+        else if (isPropMapper<I, O>(value, key)) {
+          const iKey = Object.keys(value)[0];
+          result[key] = value[iKey](input[iKey]);
+        }
 
-      if (isFlag(value) && value) {
-        result[key] = input[key as string] as any;
-      } else if (isPropKey(value)) {
-        result[key] = input[fieldMap[key as string]] as any;
-      } else if (isConverter<I, O[keyof O]>(value)) {
-        result[key] = value(input);
-      } else if (isPropMapper<I, O, keyof O>(value, key)) {
-        const iKey = Object.keys(value)[0];
-
-        result[key] = value[iKey](input[iKey]);
-      }
-
-      return result;
-    }, empty);
+        return result;
+      }, empty);
   };
-
-  return map;
 }
 
 export type InferConverter<
@@ -105,7 +86,7 @@ export type TypeMap<
   [key in keyof O]?: boolean | keyof I | Converter<I, O[key]> | PropertyMapper<I, O, key>;
 };
 
-export type InferOutput<I extends object, T extends TypeMap<I, any>> = {
+export type InferOutput<I extends object, T extends TypeMap<I, O>, O extends object = any> = {
   [key in keyof T]-?: T[key] extends true
                       ? I[Extract<key, keyof I>]
                     : T[key] extends keyof I

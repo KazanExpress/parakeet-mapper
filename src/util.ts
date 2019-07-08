@@ -28,14 +28,12 @@ export const isFlag = (
 
 export const isConverter = <I, O>(v: any): v is Converter<I, O> => typeof v === 'function';
 
-export const isPropKey = <
-  Keys extends string
->(v: any): v is Keys => typeof v === 'string';
+export const isPropKey = (v: any): v is never => typeof v === 'string';
 
 export const isPropMapper = <
   I extends object,
   O extends object,
-  Keys extends keyof O
+  Keys extends keyof O = keyof O
 >(v: any, key: Keys): v is InternalPropertyMapper<I, O, Keys> => typeof v === 'object' && isConverter(v[key]);
 
-export const typedKeyOf = <T extends object>(obj: T): Array<keyof T> => Object.keys(obj) as Array<keyof T>;
+export const typedKeyOf = <T extends object>(obj: T) => Object.keys(obj) as Array<keyof T>;
