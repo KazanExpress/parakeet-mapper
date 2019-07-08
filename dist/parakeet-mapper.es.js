@@ -1,33 +1,65 @@
-function mapFactory(FieldMap) {
-    return function (input, converters) {
-        if (!FieldMap ||
-            Array.isArray(FieldMap) ||
-            !Object.keys(FieldMap).length) {
-            return {};
+const isFlag = (v) => typeof v === 'boolean';
+const isConverter = (v) => typeof v === 'function';
+const isPropKey = (v) => typeof v === 'string';
+const isPropMapper = (v, key) => typeof v === 'object' && isConverter(v[key]);
+const typedKeyOf = (obj) => Object.keys(obj);
+
+function mapFactory(fieldMap) {
+    if (!fieldMap) {
+        return mapFactory;
+    }
+    return function (input) {
+        const empty = {};
+        if (!fieldMap || !Object.keys(fieldMap).length) {
+            return empty;
         }
-        const convert = converters ? (key, value) => (typeof converters[key] === 'function' ? converters[key](value) : value) : (_key, value) => value;
-        const result = {};
-        for (const key in FieldMap) {
-            if (typeof FieldMap[key] === 'boolean' && FieldMap[key]) {
-                result[key] = convert(key, input[key]);
-                continue;
+        return typedKeyOf(fieldMap)
+            .reduce((result, key) => {
+            const value = fieldMap[key];
+            if (isFlag(value) && value) {
+                result[key] = input[key];
             }
-            if (typeof FieldMap[key] === 'string') {
-                result[key] = convert(key, input[FieldMap[key]]);
-                continue;
+            else if (isPropKey(value)) {
+                result[key] = input[value];
             }
-            if (typeof FieldMap[key] === 'function') {
-                let mapperValue = FieldMap[key](input);
-                result[key] = convert(key, mapperValue);
-                continue;
+            else if (isConverter(value)) {
+                result[key] = value(input);
             }
-        }
-        return result;
+            else if (isPropMapper(value, key)) {
+                const iKey = Object.keys(value)[0];
+                result[key] = value[iKey](input[iKey]);
+            }
+            return result;
+        }, empty);
     };
 }
+
 function mapTypes(input, FieldMap) {
+    if (!input || !FieldMap) {
+        return mapTypes;
+    }
     return mapFactory(FieldMap)(input);
 }
 
-export { mapFactory, mapTypes };
+function Convertable(converter, reverseConverter) {
+    class Convertable {
+        constructor(options, ...misc) {
+            const converted = converter(...misc)(options);
+            for (const key in converted) {
+                this[key] = converted[key];
+            }
+        }
+    }
+    Convertable.toInput = reverseConverter ? (options, ...misc) => {
+        const converted = reverseConverter(...misc)(options);
+        for (const key in converted) {
+            converted[key] = converted[key];
+        }
+    } : undefined;
+    Convertable.createConverter = converter;
+    Convertable.reverseConverter = reverseConverter;
+    return Convertable;
+}
+
+export { mapFactory, mapTypes, Convertable };
 //# sourceMappingURL=parakeet-mapper.es.js.map
