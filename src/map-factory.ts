@@ -83,7 +83,7 @@ export type TypeMap<
    * if object - map from key in the object using mapper from the value
    * if function - map by function from the original object
    */
-  [key in keyof O]?: boolean | keyof I | Converter<I, O[key]> | PropertyMapper<I, O, key>;
+  [key in keyof O]: boolean | keyof I | Converter<I, O[key]> | PropertyMapper<I, O, key>;
 };
 
 export type InferOutput<I extends object, T extends TypeMap<I, O>, O extends object = any> = {
