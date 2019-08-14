@@ -29,9 +29,9 @@ test('isPropMapper', () => {
   const nonpropMapper = true;
   const nonpropMapper2 = { foo: true };
 
-  expect(isPropMapper<any, any>(propMapper, 'foo')).toBe(true);
-  expect(isPropMapper<any, any>(nonpropMapper, 'foo')).toBe(false);
-  expect(isPropMapper<any, any>(nonpropMapper2, 'foo')).toBe(false);
+  expect(isPropMapper<any, any>(propMapper)).toBe(true);
+  expect(isPropMapper<any, any>(nonpropMapper)).toBe(false);
+  expect(isPropMapper<any, any>(nonpropMapper2)).toBe(false);
 });
 
 test('typedKeyOf', () => {
