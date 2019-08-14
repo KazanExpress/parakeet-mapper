@@ -2,7 +2,6 @@ import {
   isFlag,
   isPropKey,
   isConverter,
-  isPropMapper,
   typedKeyOf,
   Converter,
   PropertyMapper
@@ -56,7 +55,7 @@ export function mapFactory<
         else if (isConverter<I, O[keyof O]>(value)) {
           result[key] = value(input);
         }
-        else if (isPropMapper<I, O>(value, key)) {
+        else if (typeof value === 'object') {
           const iKey = Object.keys(value)[0];
           result[key] = value[iKey](input[iKey]);
         }

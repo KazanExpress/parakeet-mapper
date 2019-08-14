@@ -34,6 +34,6 @@ export const isPropMapper = <
   I extends object,
   O extends object,
   Keys extends keyof O = keyof O
->(v: any, key: Keys): v is InternalPropertyMapper<I, O, Keys> => typeof v === 'object' && isConverter(v[key]);
+>(v: any): v is InternalPropertyMapper<I, O, Keys> => typeof v === 'object' && isConverter(v[Object.keys(v)[0]]);
 
 export const typedKeyOf = <T extends object>(obj: T) => Object.keys(obj) as Array<keyof T>;

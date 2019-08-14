@@ -114,13 +114,9 @@ export function Convertable<
       }
     }
 
-    public static toInput = reverseConverter ? <Obj extends R>(options: Obj, ...misc: MR) => {
-      const converted = reverseConverter(...misc)(options);
-
-      for (const key in converted) {
-        converted[key] = converted[key];
-      }
-    } : undefined;
+    public static toInput = reverseConverter ? <Obj extends R>(options: Obj, ...misc: MR) => (
+      reverseConverter(...misc)(options)
+     ) : undefined;
 
     public static readonly createConverter = converter;
 
