@@ -5,7 +5,6 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var isFlag = function (v) { return typeof v === 'boolean'; };
 var isConverter = function (v) { return typeof v === 'function'; };
 var isPropKey = function (v) { return typeof v === 'string'; };
-var isPropMapper = function (v, key) { return typeof v === 'object' && isConverter(v[key]); };
 var typedKeyOf = function (obj) { return Object.keys(obj); };
 
 function mapFactory(fieldMap) {
@@ -29,7 +28,7 @@ function mapFactory(fieldMap) {
             else if (isConverter(value)) {
                 result[key] = value(input);
             }
-            else if (isPropMapper(value, key)) {
+            else if (typeof value === 'object') {
                 var iKey = Object.keys(value)[0];
                 result[key] = value[iKey](input[iKey]);
             }
@@ -62,10 +61,7 @@ function Convertable(converter, reverseConverter) {
             for (var _i = 1; _i < arguments.length; _i++) {
                 misc[_i - 1] = arguments[_i];
             }
-            var converted = reverseConverter.apply(void 0, misc)(options);
-            for (var key in converted) {
-                converted[key] = converted[key];
-            }
+            return (reverseConverter.apply(void 0, misc)(options));
         } : undefined;
         Convertable.createConverter = converter;
         Convertable.reverseConverter = reverseConverter;

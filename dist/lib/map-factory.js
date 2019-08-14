@@ -22,7 +22,7 @@ function mapFactory(fieldMap) {
             else if (util_1.isConverter(value)) {
                 result[key] = value(input);
             }
-            else if (util_1.isPropMapper(value, key)) {
+            else if (typeof value === 'object') {
                 var iKey = Object.keys(value)[0];
                 result[key] = value[iKey](input[iKey]);
             }

@@ -1,7 +1,6 @@
 const isFlag = (v) => typeof v === 'boolean';
 const isConverter = (v) => typeof v === 'function';
 const isPropKey = (v) => typeof v === 'string';
-const isPropMapper = (v, key) => typeof v === 'object' && isConverter(v[key]);
 const typedKeyOf = (obj) => Object.keys(obj);
 
 function mapFactory(fieldMap) {
@@ -25,7 +24,7 @@ function mapFactory(fieldMap) {
             else if (isConverter(value)) {
                 result[key] = value(input);
             }
-            else if (isPropMapper(value, key)) {
+            else if (typeof value === 'object') {
                 const iKey = Object.keys(value)[0];
                 result[key] = value[iKey](input[iKey]);
             }
@@ -50,12 +49,7 @@ function Convertable(converter, reverseConverter) {
             }
         }
     }
-    Convertable.toInput = reverseConverter ? (options, ...misc) => {
-        const converted = reverseConverter(...misc)(options);
-        for (const key in converted) {
-            converted[key] = converted[key];
-        }
-    } : undefined;
+    Convertable.toInput = reverseConverter ? (options, ...misc) => (reverseConverter(...misc)(options)) : undefined;
     Convertable.createConverter = converter;
     Convertable.reverseConverter = reverseConverter;
     return Convertable;

@@ -17,10 +17,7 @@ function Convertable(converter, reverseConverter) {
             for (var _i = 1; _i < arguments.length; _i++) {
                 misc[_i - 1] = arguments[_i];
             }
-            var converted = reverseConverter.apply(void 0, misc)(options);
-            for (var key in converted) {
-                converted[key] = converted[key];
-            }
+            return (reverseConverter.apply(void 0, misc)(options));
         } : undefined;
         Convertable.createConverter = converter;
         Convertable.reverseConverter = reverseConverter;
