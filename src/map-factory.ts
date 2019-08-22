@@ -54,7 +54,11 @@ export function mapFactory<
           result[key] = value(input);
         } else if (typeof value === 'object') {
           const iKey = Object.keys(value)[0];
-          result[key] = value[iKey](input[iKey]);
+
+          // If no value is found in input - get it by the same key as in the output
+          const ivalue = input[iKey] == null ? input[key as string] : input[iKey];
+
+          result[key] = value[iKey](ivalue);
         }
 
         return result;
@@ -79,7 +83,7 @@ export type TypeMap<
    * if object - map from key in the object using mapper from the value
    * if function - map by function from the original object
    */
-  [key in keyof O]: boolean | keyof I | Converter<I, O[key]> | PropertyMapper<I, O, key>;
+  [key in keyof O]: boolean | keyof I | Converter<I, O[key]> | PropertyMapper<I, O, key, Extract<key, keyof I>>;
 };
 
 export type InferOutput<I extends object, T extends TypeMap<I, O>, O extends object = any> = {

@@ -19,8 +19,11 @@ export type InternalPropertyMapper<
 export type PropertyMapper<
   I extends object,
   O extends object,
-  key extends keyof O
-> = EitherField<Partial<InternalPropertyMapper<I, O, key>>>;
+  key extends keyof O,
+  ikey extends keyof I
+> = EitherField<Partial<InternalPropertyMapper<I, O, key>>> | (ikey extends keyof I ? {
+  [key: string]: Converter<I[ikey], O[key]>;
+} : never);
 
 export const isFlag = (
   v: any
