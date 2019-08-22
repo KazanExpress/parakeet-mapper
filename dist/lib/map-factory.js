@@ -24,7 +24,9 @@ function mapFactory(fieldMap) {
             }
             else if (typeof value === 'object') {
                 var iKey = Object.keys(value)[0];
-                result[key] = value[iKey](input[iKey]);
+                // If no value is found in input - get it by the same key as in the output
+                var ivalue = input[iKey] == null ? input[key] : input[iKey];
+                result[key] = value[iKey](ivalue);
             }
             return result;
         }, empty);

@@ -26,7 +26,9 @@ function mapFactory(fieldMap) {
             }
             else if (typeof value === 'object') {
                 const iKey = Object.keys(value)[0];
-                result[key] = value[iKey](input[iKey]);
+                // If no value is found in input - get it by the same key as in the output
+                const ivalue = input[iKey] == null ? input[key] : input[iKey];
+                result[key] = value[iKey](ivalue);
             }
             return result;
         }, empty);
@@ -55,5 +57,22 @@ function Convertable(converter, reverseConverter) {
     return Convertable;
 }
 
-export { mapFactory, mapTypes, Convertable };
+function flattenPromises(obj) {
+    const promises = [];
+    for (const key in obj) {
+        const value = obj[key];
+        if (value instanceof Promise) {
+            promises.push(value.then(resolved => {
+                obj[key] = resolved;
+            }));
+        }
+    }
+    return Promise.all(promises)
+        .then(_ => obj);
+}
+function wait(convert) {
+    return input => flattenPromises(convert(input));
+}
+
+export { mapFactory, mapTypes, Convertable, flattenPromises, wait };
 //# sourceMappingURL=parakeet-mapper.es.js.map

@@ -6,4 +6,5 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./map-factory"));
 __export(require("./map-types"));
 __export(require("./convertable"));
+__export(require("./wait"));
 //# sourceMappingURL=index.js.map

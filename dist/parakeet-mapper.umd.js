@@ -32,7 +32,9 @@
               }
               else if (typeof value === 'object') {
                   var iKey = Object.keys(value)[0];
-                  result[key] = value[iKey](input[iKey]);
+                  // If no value is found in input - get it by the same key as in the output
+                  var ivalue = input[iKey] == null ? input[key] : input[iKey];
+                  result[key] = value[iKey](ivalue);
               }
               return result;
           }, empty);
@@ -72,9 +74,31 @@
       return Convertable;
   }
 
+  function flattenPromises(obj) {
+      var promises = [];
+      var _loop_1 = function (key) {
+          var value = obj[key];
+          if (value instanceof Promise) {
+              promises.push(value.then(function (resolved) {
+                  obj[key] = resolved;
+              }));
+          }
+      };
+      for (var key in obj) {
+          _loop_1(key);
+      }
+      return Promise.all(promises)
+          .then(function (_) { return obj; });
+  }
+  function wait(convert) {
+      return function (input) { return flattenPromises(convert(input)); };
+  }
+
   exports.mapFactory = mapFactory;
   exports.mapTypes = mapTypes;
   exports.Convertable = Convertable;
+  exports.flattenPromises = flattenPromises;
+  exports.wait = wait;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
