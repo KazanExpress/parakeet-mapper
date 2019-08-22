@@ -12,24 +12,26 @@ npm install --save parakeet-mapper
 ```
 For more options see [installation](#installation)
 
-- [Parakeet Mapper](#Parakeet-Mapper)
-  - [What is this?](#What-is-this)
-  - [Installation](#Installation)
-    - [Install as dependency](#Install-as-dependency)
-    - [Import and use](#Import-and-use)
-  - [API](#API)
-    - [TypeMap](#TypeMap)
-      - [Examples](#Examples)
-    - [mapFactory](#mapFactory)
-      - [Overloads](#Overloads)
-    - [mapTypes](#mapTypes)
-      - [Overloads](#Overloads-1)
-    - [Convertable](#Convertable)
-    - [Convertable class](#Convertable-class)
+- [Parakeet Mapper](#parakeet-mapper)
+  - [What is this?](#what-is-this)
+  - [Installation](#installation)
+    - [Install as dependency](#install-as-dependency)
+    - [Import and use](#import-and-use)
+  - [API](#api)
+    - [TypeMap](#typemap)
+      - [Examples](#examples)
+    - [mapFactory](#mapfactory)
+      - [Overloads](#overloads)
+    - [mapTypes](#maptypes)
+      - [Overloads](#overloads-1)
+    - [Wait](#wait)
+    - [flattenPromises](#flattenpromises)
+    - [Convertable](#convertable)
+    - [Convertable class](#convertable-class)
       - [`constructor`](#constructor)
-      - [`toInput`](#toInput)
-      - [`Convertable.createConverter`](#ConvertablecreateConverter)
-      - [`Convertable.reverseConverter`](#ConvertablereverseConverter)
+      - [`toInput`](#toinput)
+      - [`Convertable.createConverter`](#convertablecreateconverter)
+      - [`Convertable.reverseConverter`](#convertablereverseconverter)
 
 ---
 
@@ -224,6 +226,83 @@ There are 3. All are semantically the same as the overloads of [mapFactory](#Ove
 /* 1 */ mapTypes<InputType, OutputType>(input, TypeMap);
 /* 2 */ mapTypes<InputType>()(input, TypeMap);
 /* 3 */ mapTypes<InputType, OutputType>()(input, TypeMap);
+```
+
+### Wait
+> `function`\
+> **new** in `v2.1`
+
+A complementary function to `mapFactory` that helps to flatten out promises
+
+It produces a converter that *returns a flat promise* from a converter that returns an object *with promises*.
+
+In a typical situation, when some convertations are asyncronous, you'd end up with this:
+```ts
+import { mapTypes } from 'parakeet-mapper';
+
+// Imagine that this is requesting something from an API and returns a promise
+const requestFromApi = (value) => Promise.resolve(value);
+
+const input = {
+  a: 'a',
+  b: 42,
+  c: 'c'
+};
+
+const getAandBfromAPI = mapFactory({
+  b: true,
+  a: { a: requestFromApi },
+  c: { c: requestFromApi }
+});
+
+const output = getAandBfromAPI(input);
+// Result:
+/* {
+  a: Promise<'a'>,
+  b: 42,
+  c: Promise<'b'>
+} */
+// Not very comfortable to await every single value after this
+```
+
+Now with `wait`:
+```ts
+import { wait } from 'parakeet-mapper';
+
+const waitForAandB = wait(getAandBfromAPI);
+
+
+const output = getAandBfromAPI(input);
+// Result:
+/* Promise<{
+  a: 'a',
+  b: 42,
+  c: 'b'
+}> */
+// Much more useful now
+```
+
+### flattenPromises
+> `function`\
+> **new** in `v2.1`
+
+Internally used in [`wait`](#wait), flattens top-level promises in an object:
+```ts
+import { flattenPromises } from 'parakeet-mapper';
+
+const objWithPromises = {
+  a: Promise.resolve('a'),
+  b: 42,
+  c: Promise.resolve('b')
+};
+
+const flat = flattenPromises(objWithPromises);
+// Result
+/* Promise<{
+  a: 'a',
+  b: 42,
+  c: 'b'
+}> */
 ```
 
 ### Convertable
