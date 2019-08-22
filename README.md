@@ -20,6 +20,7 @@ For more options see [installation](#installation)
   - [API](#api)
     - [TypeMap](#typemap)
       - [Examples](#examples)
+      - ["The same key" object shorthand](#%22the-same-key%22-object-shorthand)
     - [mapFactory](#mapfactory)
       - [Overloads](#overloads)
     - [mapTypes](#maptypes)
@@ -108,7 +109,7 @@ The rules are simple:\
 - Each value tells what to assign to that key from the input.
   - `true` = the value is assigned from the same key in the input.
   - A string = the value is assigned from this string key in the input.
-  - An object = the value is assigned from this object's first key in the input **and** is process using a converter.
+  - An object = the value is assigned from this object's first key in the input **and** is processed using the value as converter.
   - A function = the value is mapped using this function from the input.
 
 #### Examples
@@ -148,6 +149,29 @@ const TypeMap = {
   // notice the absence of `ommited` property
 }
 ```
+
+#### "The same key" object shorthand
+> **new** in `v2.1`
+
+It's not necessary to specify the correct key in the conversion object:
+```ts
+const input = {
+  number: '42',
+};
+
+const TypeMap = {
+  // Simply converts from string to number using the `Number` function
+  number: { Number },
+};
+
+/* output */ {
+  number: 42, // Number('42')
+  // Notice that the property name stayed the same,
+  // even though we used a `{ Number: Number }` shorthand.
+}
+```
+
+It only works if the input has the same property key as the output.
 
 ### mapFactory
 > `function`
