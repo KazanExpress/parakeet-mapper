@@ -20,7 +20,7 @@ For more options see [installation](#installation)
   - [API](#api)
     - [TypeMap](#typemap)
       - [Examples](#examples)
-      - ["The same key" object shorthand](#%22the-same-key%22-object-shorthand)
+      - ["The same key" object/array shorthand](#%22the-same-key%22-objectarray-shorthand)
     - [mapFactory](#mapfactory)
       - [Overloads](#overloads)
     - [mapTypes](#maptypes)
@@ -110,6 +110,7 @@ The rules are simple:\
   - `true` = the value is assigned from the same key in the input.
   - A string = the value is assigned from this string key in the input.
   - An object = the value is assigned from this object's first key in the input **and** is processed using the value as converter.
+  - An array of a single element = the first element in the array is used as converter for the input value by the output key.
   - A function = the value is mapped using this function from the input.
 
 #### Examples
@@ -150,8 +151,8 @@ const TypeMap = {
 }
 ```
 
-#### "The same key" object shorthand
-> **new** in `v2.1`
+#### "The same key" object/array shorthand
+> **new** in `v2.2`
 
 It's not necessary to specify the correct key in the conversion object:
 ```ts
@@ -172,6 +173,24 @@ const TypeMap = {
 ```
 
 It only works if the input has the same property key as the output.
+
+Can also be written using the array (tuple) syntax:
+```ts
+const input = {
+  number: '42',
+};
+
+const TypeMap = {
+  // Simply converts from string to number using the `Number` function
+  number: [Number],
+};
+
+/* output */ {
+  number: 42, // Number('42')
+  // Notice that the property name stayed the same,
+  // even though we used a `{ Number: Number }` shorthand.
+}
+```
 
 ### mapFactory
 > `function`
