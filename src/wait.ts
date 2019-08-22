@@ -4,7 +4,9 @@ type StripPromises<O> = {
   [key in keyof O]: O[key] extends Promise<infer OK> ? OK : O[key];
 };
 
-export function flattenPromises<T>(obj: T): Promise<StripPromises<T>> {
+type FlattenPromises<T> = Promise<StripPromises<T>>;
+
+export function flattenPromises<T>(obj: T): FlattenPromises<T> {
   const promises: Promise<void>[] = [];
 
   for (const key in obj) {
@@ -21,6 +23,6 @@ export function flattenPromises<T>(obj: T): Promise<StripPromises<T>> {
     .then(_ => obj as StripPromises<T>);
 }
 
-export function wait<I, O>(convert: Converter<I, O>): Converter<I, Promise<StripPromises<O>>> {
+export function wait<I, O>(convert: Converter<I, O>): Converter<I, FlattenPromises<O>> {
   return input => flattenPromises(convert(input));
 }
