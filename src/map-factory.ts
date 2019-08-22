@@ -88,7 +88,7 @@ export type TypeMap<
     | keyof I
     | Converter<I, O[key]>
     | PropertyMapper<I, O, key, Extract<key, keyof I>>
-    | [Converter<Extract<key, keyof I>, O[key]>]
+    | [Converter<I[Extract<key, keyof I>], O[key]>]
 };
 
 export type InferOutput<I extends object, T extends TypeMap<I, O>, O extends object = any> = {
