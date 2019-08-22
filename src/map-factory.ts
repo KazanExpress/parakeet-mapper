@@ -15,7 +15,7 @@ export function mapFactory<
 export function mapFactory<
   I extends object
 >(): <
-  F extends TypeMap<I, any>,
+  F extends TypeMap<I>,
   O extends object = InferOutput<I, F>
 >(fieldMap: F) => Converter<I, O>;
 
@@ -48,14 +48,11 @@ export function mapFactory<
 
         if (isFlag(value) && value) {
           result[key] = input[key as string];
-        }
-        else if (isPropKey(value)) {
+        } else if (isPropKey(value)) {
           result[key] = input[value];
-        }
-        else if (isConverter<I, O[keyof O]>(value)) {
+        } else if (isConverter<I, O[keyof O]>(value)) {
           result[key] = value(input);
-        }
-        else if (typeof value === 'object') {
+        } else if (typeof value === 'object') {
           const iKey = Object.keys(value)[0];
           result[key] = value[iKey](input[iKey]);
         }
@@ -97,4 +94,4 @@ export type InferOutput<I extends object, T extends TypeMap<I, O>, O extends obj
                         ? OKT
                       : never
                     : never;
-}
+};
