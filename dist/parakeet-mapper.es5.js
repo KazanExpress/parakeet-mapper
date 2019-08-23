@@ -69,14 +69,20 @@ function Convertable(converter, reverseConverter) {
     return Convertable;
 }
 
+var isPromise = function (v) { return v instanceof Promise; };
+var isPromiseArr = function (v) { return Array.isArray(v) && v.some(isPromise); };
 function flattenPromises(obj) {
     var promises = [];
     var _loop_1 = function (key) {
         var value = obj[key];
-        if (value instanceof Promise) {
-            promises.push(value.then(function (resolved) {
-                obj[key] = resolved;
-            }));
+        var resolve = function (promise) { return promise.then(function (res) {
+            obj[key] = res;
+        }); };
+        if (isPromise(value)) {
+            promises.push(resolve(value));
+        }
+        else if (isPromiseArr(value)) {
+            promises.push(resolve(Promise.all(value)));
         }
     };
     for (var key in obj) {

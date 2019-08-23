@@ -54,14 +54,20 @@ function Convertable(converter, reverseConverter) {
     return Convertable;
 }
 
+const isPromise = (v) => v instanceof Promise;
+const isPromiseArr = (v) => Array.isArray(v) && v.some(isPromise);
 function flattenPromises(obj) {
     const promises = [];
     for (const key in obj) {
         const value = obj[key];
-        if (value instanceof Promise) {
-            promises.push(value.then(resolved => {
-                obj[key] = resolved;
-            }));
+        const resolve = (promise) => promise.then(res => {
+            obj[key] = res;
+        });
+        if (isPromise(value)) {
+            promises.push(resolve(value));
+        }
+        else if (isPromiseArr(value)) {
+            promises.push(resolve(Promise.all(value)));
         }
     }
     return Promise.all(promises)
