@@ -49,10 +49,10 @@ export function mapFactory<
       } else if (typeof value === 'object') {
         for (var _iKey in value) break;
         const iKey: string = _iKey!;
-        const iValue = input[iKey! as string];
+        const iValue = input[iKey];
 
         // If no value is found in input - get it by the same key as in the output
-        result[key] = value[iKey! as string](
+        result[key] = value[iKey](
           iValue == null ? inputValue : iValue
         );
       }
