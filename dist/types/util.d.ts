@@ -8,8 +8,5 @@ export declare type InternalPropertyMapper<I extends object, O extends object, k
 export declare type PropertyMapper<I extends object, O extends object, key extends keyof O, ikey extends keyof I> = EitherField<Partial<InternalPropertyMapper<I, O, key>>> | (ikey extends keyof I ? {
     [key: string]: Converter<I[ikey], O[key]>;
 } : never);
-export declare const isFlag: (v: any) => v is boolean;
 export declare const isConverter: <I, O>(v: any) => v is Converter<I, O>;
 export declare const isPropKey: (v: any) => v is never;
-export declare const isPropMapper: <I extends object, O extends object, Keys extends keyof O = keyof O>(v: any) => v is InternalPropertyMapper<I, O, Keys>;
-export declare const typedKeyOf: <T extends object>(obj: T) => (keyof T)[];

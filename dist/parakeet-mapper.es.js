@@ -1,22 +1,17 @@
-const isFlag = (v) => typeof v === 'boolean';
 const isConverter = (v) => typeof v === 'function';
 const isPropKey = (v) => typeof v === 'string';
-const typedKeyOf = (obj) => Object.keys(obj);
 
 function mapFactory(fieldMap) {
     if (!fieldMap) {
         return mapFactory;
     }
     return function (input) {
-        const empty = {};
-        if (!fieldMap || !Object.keys(fieldMap).length) {
-            return empty;
-        }
-        return typedKeyOf(fieldMap)
-            .reduce((result, key) => {
+        const result = {};
+        for (const key in fieldMap) {
             const value = fieldMap[key];
-            if (isFlag(value) && value) {
-                result[key] = input[key];
+            const inputValue = input[key];
+            if (value === true) {
+                result[key] = inputValue;
             }
             else if (isPropKey(value)) {
                 result[key] = input[value];
@@ -25,13 +20,15 @@ function mapFactory(fieldMap) {
                 result[key] = value(input);
             }
             else if (typeof value === 'object') {
-                const iKey = Object.keys(value)[0];
+                for (var _iKey in value)
+                    break;
+                const iKey = _iKey;
+                const iValue = input[iKey];
                 // If no value is found in input - get it by the same key as in the output
-                const ivalue = input[iKey] == null ? input[key] : input[iKey];
-                result[key] = value[iKey](ivalue);
+                result[key] = value[iKey](iValue == null ? inputValue : iValue);
             }
-            return result;
-        }, empty);
+        }
+        return result;
     };
 }
 

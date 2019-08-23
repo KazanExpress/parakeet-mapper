@@ -4,25 +4,20 @@
   (factory((global.parakeetMapper = {})));
 }(this, (function (exports) { 'use strict';
 
-  var isFlag = function (v) { return typeof v === 'boolean'; };
   var isConverter = function (v) { return typeof v === 'function'; };
   var isPropKey = function (v) { return typeof v === 'string'; };
-  var typedKeyOf = function (obj) { return Object.keys(obj); };
 
   function mapFactory(fieldMap) {
       if (!fieldMap) {
           return mapFactory;
       }
       return function (input) {
-          var empty = {};
-          if (!fieldMap || !Object.keys(fieldMap).length) {
-              return empty;
-          }
-          return typedKeyOf(fieldMap)
-              .reduce(function (result, key) {
+          var result = {};
+          for (var key in fieldMap) {
               var value = fieldMap[key];
-              if (isFlag(value) && value) {
-                  result[key] = input[key];
+              var inputValue = input[key];
+              if (value === true) {
+                  result[key] = inputValue;
               }
               else if (isPropKey(value)) {
                   result[key] = input[value];
@@ -31,13 +26,15 @@
                   result[key] = value(input);
               }
               else if (typeof value === 'object') {
-                  var iKey = Object.keys(value)[0];
+                  for (var _iKey in value)
+                      break;
+                  var iKey = _iKey;
+                  var iValue = input[iKey];
                   // If no value is found in input - get it by the same key as in the output
-                  var ivalue = input[iKey] == null ? input[key] : input[iKey];
-                  result[key] = value[iKey](ivalue);
+                  result[key] = value[iKey](iValue == null ? inputValue : iValue);
               }
-              return result;
-          }, empty);
+          }
+          return result;
       };
   }
 
