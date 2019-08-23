@@ -152,7 +152,7 @@ const TypeMap = {
 ```
 
 #### "The same key" object/array shorthand
-> **new** in `v2.2`
+> **new** in `v2.1.2`
 
 It's not necessary to specify the correct key in the conversion object:
 ```ts

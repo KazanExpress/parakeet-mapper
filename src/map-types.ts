@@ -3,7 +3,7 @@ import { TypeMap, InferOutput, mapFactory } from './map-factory';
 export function mapTypes<
   I extends object
 >(): <
-  F extends TypeMap<I, any>,
+  F extends TypeMap<I>,
   O extends object = InferOutput<I, F>
 >(input: I, FieldMap: F) => O;
 
@@ -11,7 +11,7 @@ export function mapTypes<
   I extends object,
   O extends object
 >(): <
-  F extends TypeMap<I, any>,
+  F extends TypeMap<I>,
   RealO extends object = InferOutput<I, F, O>
 >(input: I, FieldMap: F) => RealO;
 

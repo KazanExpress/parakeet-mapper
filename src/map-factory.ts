@@ -1,8 +1,6 @@
 import {
-  isFlag,
   isPropKey,
   isConverter,
-  typedKeyOf,
   Converter,
   PropertyMapper
 } from './util';
@@ -36,33 +34,31 @@ export function mapFactory<
   }
 
   return function (input: I): O {
-    const empty = {} as O;
+    const result = {} as O;
 
-    if (!fieldMap || !Object.keys(fieldMap).length) {
-      return empty;
+    for (const key in fieldMap) {
+      const value = fieldMap[key];
+      const inputValue = input[key as string];
+
+      if (value === true) {
+        result[key] = inputValue;
+      } else if (isPropKey(value)) {
+        result[key] = input[value];
+      } else if (isConverter<I, O[Extract<keyof O, string>]>(value)) {
+        result[key] = value(input);
+      } else if (typeof value === 'object') {
+        for (var _iKey in value) break;
+        const iKey: string = _iKey!;
+        const iValue = input[iKey! as string];
+
+        // If no value is found in input - get it by the same key as in the output
+        result[key] = value[iKey! as string](
+          iValue == null ? inputValue : iValue
+        );
+      }
     }
 
-    return typedKeyOf(fieldMap)
-      .reduce((result, key) => {
-        const value = fieldMap[key];
-
-        if (isFlag(value) && value) {
-          result[key] = input[key as string];
-        } else if (isPropKey(value)) {
-          result[key] = input[value];
-        } else if (isConverter<I, O[keyof O]>(value)) {
-          result[key] = value(input);
-        } else if (typeof value === 'object') {
-          const iKey = Object.keys(value)[0];
-
-          // If no value is found in input - get it by the same key as in the output
-          const ivalue = input[iKey] == null ? input[key as string] : input[iKey];
-
-          result[key] = value[iKey](ivalue);
-        }
-
-        return result;
-      }, empty);
+    return result;
   };
 }
 
@@ -81,6 +77,7 @@ export type TypeMap<
    * if false - do not map
    * if string - map from the according key
    * if object - map from key in the object using mapper from the value
+   * if array - map from the key in map using the first value in the array
    * if function - map by function from the original object
    */
   [key in keyof O]:
@@ -102,5 +99,7 @@ export type InferOutput<I extends object, T extends TypeMap<I, O>, O extends obj
                       ? OT extends Converter<any, infer OKT>
                         ? OKT
                       : never
+                    : T[key] extends [Converter<any, infer R>]
+                      ? R
                     : never;
 };
