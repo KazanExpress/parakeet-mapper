@@ -287,7 +287,7 @@ import { mapTypes } from 'parakeet-mapper';
 const requestFromApi = (value) => Promise.resolve(value);
 
 const input = {
-  a: 'a',
+  a: ['a'],
   b: 42,
   c: 'c'
 };
@@ -301,7 +301,7 @@ const getAandBfromAPI = mapFactory({
 const output = getAandBfromAPI(input);
 // Result:
 /* {
-  a: Promise<'a'>,
+  a: Promise<['a']>,
   b: 42,
   c: Promise<'b'>
 } */
@@ -318,7 +318,7 @@ const waitForAandB = wait(getAandBfromAPI);
 const output = getAandBfromAPI(input);
 // Result:
 /* Promise<{
-  a: 'a',
+  a: ['a'],
   b: 42,
   c: 'b'
 }> */
@@ -334,7 +334,7 @@ Internally used in [`wait`](#wait), flattens top-level promises in an object:
 import { flattenPromises } from 'parakeet-mapper';
 
 const objWithPromises = {
-  a: Promise.resolve('a'),
+  a: [Promise.resolve('a')],
   b: 42,
   c: Promise.resolve('b')
 };
@@ -342,7 +342,7 @@ const objWithPromises = {
 const flat = flattenPromises(objWithPromises);
 // Result
 /* Promise<{
-  a: 'a',
+  a: ['a'],
   b: 42,
   c: 'b'
 }> */
