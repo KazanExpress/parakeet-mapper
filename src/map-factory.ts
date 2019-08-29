@@ -47,14 +47,17 @@ export function mapFactory<
       } else if (isConverter<I, O[Extract<keyof O, string>]>(value)) {
         result[key] = value(input);
       } else if (typeof value === 'object') {
-        for (var _iKey in value) break;
-        const iKey: string = _iKey!;
-        const iValue = input[iKey];
+        for (const iKey in (value as object)) {
+          const iValue = input[iKey];
 
-        // If no value is found in input - get it by the same key as in the output
-        result[key] = value[iKey](
-          iValue == null ? inputValue : iValue
-        );
+          // If no value is found in input - get it by the same key as in the output
+          result[key] = value[iKey](
+            iValue == null ? inputValue : iValue
+          );
+
+          // We only need to check the first key
+          break;
+        }
       }
     }
 
