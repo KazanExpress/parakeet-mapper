@@ -24,12 +24,13 @@ function mapFactory(fieldMap) {
                 result[key] = value(input);
             }
             else if (typeof value === 'object') {
-                for (var _iKey in value)
+                for (var iKey in value) {
+                    var iValue = input[iKey];
+                    // If no value is found in input - get it by the same key as in the output
+                    result[key] = value[iKey](iValue == null ? inputValue : iValue);
+                    // We only need to check the first key
                     break;
-                var iKey = _iKey;
-                var iValue = input[iKey];
-                // If no value is found in input - get it by the same key as in the output
-                result[key] = value[iKey](iValue == null ? inputValue : iValue);
+                }
             }
         }
         return result;
@@ -87,6 +88,9 @@ function flattenPromises(obj) {
     };
     for (var key in obj) {
         _loop_1(key);
+    }
+    if (promises.length === 0) {
+        return obj;
     }
     return Promise.all(promises)
         .then(function (_) { return obj; });
