@@ -2,7 +2,8 @@ import {
   isPropKey,
   isConverter,
   Converter,
-  PropertyMapper
+  PropertyMapper,
+  PropertyConverter
 } from './util';
 
 export function mapFactory<
@@ -87,8 +88,8 @@ export type TypeMap<
     | boolean
     | keyof I
     | Converter<I, O[key]>
-    | PropertyMapper<I, O, key, Extract<key, keyof I>>
-    | [Converter<I[Extract<key, keyof I>], O[key]>]
+    | PropertyMapper<I, O, key>
+    | PropertyConverter<I, O, key>
 };
 
 export type InferOutput<I extends object, T extends TypeMap<I, O>, O extends object = any> = {
@@ -102,7 +103,7 @@ export type InferOutput<I extends object, T extends TypeMap<I, O>, O extends obj
                       ? OT extends Converter<any, infer OKT>
                         ? OKT
                       : never
-                    : T[key] extends [Converter<any, infer R>]
+                    : T[key] extends readonly [Converter<any, infer R>]
                       ? R
                     : never;
 };

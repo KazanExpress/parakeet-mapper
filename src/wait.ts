@@ -1,15 +1,15 @@
 import { Converter } from './util';
 
-export type StripPromises<O> = O[keyof O] extends Promise<any> ? {
+export type StripPromises<O> = {
   [key in keyof O]:
     | O[key] extends Promise<infer OK>
       ? OK
     : O[key] extends Array<Promise<infer OK>>
       ? Array<OK>
     : O[key];
-} : O;
+};
 
-export type FlattenPromises<T> = T[keyof T] extends Promise<any> ? Promise<StripPromises<T>> : T;
+export type FlattenPromises<T> = Promise<StripPromises<T>>;
 
 const isPromise = (v: any): v is Promise<any> => v instanceof Promise;
 const isPromiseArr = (v: any): v is Promise<any>[] => Array.isArray(v) && v.some(isPromise);
@@ -30,10 +30,6 @@ export function flattenPromises<T>(obj: T): FlattenPromises<T> {
     } else if (isPromiseArr(value)) {
       promises.push(resolve(Promise.all(value)));
     }
-  }
-
-  if (promises.length === 0) {
-    return obj as FlattenPromises<T>;
   }
 
   return Promise.all(promises)
