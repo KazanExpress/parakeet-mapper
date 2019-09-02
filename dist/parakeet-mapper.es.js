@@ -71,9 +71,6 @@ function flattenPromises(obj) {
             promises.push(resolve(Promise.all(value)));
         }
     }
-    if (promises.length === 0) {
-        return obj;
-    }
     return Promise.all(promises)
         .then(_ => obj);
 }

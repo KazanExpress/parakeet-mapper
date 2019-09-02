@@ -89,9 +89,6 @@ function flattenPromises(obj) {
     for (var key in obj) {
         _loop_1(key);
     }
-    if (promises.length === 0) {
-        return obj;
-    }
     return Promise.all(promises)
         .then(function (_) { return obj; });
 }
