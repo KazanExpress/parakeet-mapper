@@ -1,4 +1,4 @@
-const isConverter = (v) => typeof v === 'function';
+const isFactory = (v) => typeof v === 'function';
 const isPropKey = (v) => typeof v === 'string';
 
 function mapFactory(fieldMap) {
@@ -16,8 +16,8 @@ function mapFactory(fieldMap) {
             else if (isPropKey(value)) {
                 result[key] = input[value];
             }
-            else if (isConverter(value)) {
-                result[key] = value(input);
+            else if (isFactory(value)) {
+                result[key] = value(input, result);
             }
             else if (typeof value === 'object') {
                 for (const iKey in value) {

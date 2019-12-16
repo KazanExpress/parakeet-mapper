@@ -16,8 +16,8 @@ function mapFactory(fieldMap) {
             else if (util_1.isPropKey(value)) {
                 result[key] = input[value];
             }
-            else if (util_1.isConverter(value)) {
-                result[key] = value(input);
+            else if (util_1.isFactory(value)) {
+                result[key] = value(input, result);
             }
             else if (typeof value === 'object') {
                 for (var iKey in value) {

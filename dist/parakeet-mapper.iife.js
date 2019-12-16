@@ -1,7 +1,7 @@
 var parakeetMapper = (function (exports) {
   'use strict';
 
-  var isConverter = function (v) { return typeof v === 'function'; };
+  var isFactory = function (v) { return typeof v === 'function'; };
   var isPropKey = function (v) { return typeof v === 'string'; };
 
   function mapFactory(fieldMap) {
@@ -19,8 +19,8 @@ var parakeetMapper = (function (exports) {
               else if (isPropKey(value)) {
                   result[key] = input[value];
               }
-              else if (isConverter(value)) {
-                  result[key] = value(input);
+              else if (isFactory(value)) {
+                  result[key] = value(input, result);
               }
               else if (typeof value === 'object') {
                   for (var iKey in value) {
