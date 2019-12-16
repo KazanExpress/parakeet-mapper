@@ -98,6 +98,8 @@ export type InferOutput<I extends object, T extends TypeMap<I, O>, O extends obj
                       ? I[Extract<key, keyof I>]
                     : T[key] extends keyof I
                       ? I[T[key]]
+                    : T[key] extends PropertyFactory<I, O, infer K>
+                      ? O[K]
                     : T[key] extends Converter<I, infer OT>
                       ? OT
                     : T[key] extends Partial<Record<string, infer OT>>
