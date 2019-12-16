@@ -20,7 +20,7 @@ For more options see [installation](#installation)
   - [API](#api)
     - [TypeMap](#typemap)
       - [Examples](#examples)
-      - [&quot;The same key&quot; object/array shorthand](#quotthe-same-keyquot-objectarray-shorthand)
+      - [object/array shorthand with the same key](#objectarray-shorthand-with-the-same-key)
     - [mapFactory](#mapfactory)
       - [Overloads](#overloads)
     - [mapTypes](#maptypes)
@@ -154,7 +154,7 @@ const TypeMap = {
 }
 ```
 
-#### "The same key" object/array shorthand
+#### object/array shorthand with the same key
 > **new** in `v2.1.2`
 
 It's not necessary to specify the correct key in the conversion object:
