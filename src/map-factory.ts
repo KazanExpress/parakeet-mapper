@@ -1,9 +1,10 @@
 import {
   isPropKey,
-  isConverter,
+  isFactory,
   Converter,
   PropertyMapper,
-  PropertyConverter
+  PropertyConverter,
+  PropertyFactory
 } from './util';
 
 export function mapFactory<
@@ -45,8 +46,8 @@ export function mapFactory<
         result[key] = inputValue;
       } else if (isPropKey(value)) {
         result[key] = input[value];
-      } else if (isConverter<I, O[Extract<keyof O, string>]>(value)) {
-        result[key] = value(input);
+      } else if (isFactory<I, O, Extract<keyof O, string>>(value)) {
+        result[key] = value(input, result);
       } else if (typeof value === 'object') {
         for (const iKey in (value as object)) {
           const iValue = input[iKey];
@@ -87,7 +88,7 @@ export type TypeMap<
   [key in keyof O]:
     | boolean
     | keyof I
-    | Converter<I, O[key]>
+    | PropertyFactory<I, O, key>
     | PropertyMapper<I, O, key>
     | PropertyConverter<I, O, key>
 };
