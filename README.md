@@ -138,10 +138,10 @@ const TypeMap = {
   // Mapped using a function and also renamed.
   mappedSum: input => input.mapped.reduce((a, b) => a + b),
 
-  // Output object is also accessible in the function
-  // This allows to re-use operations for already converted values
-  // (like mappedSum, in this example)
-  mappedPlusConverted: (input, output) => output.mappedSum + Number(input.converted)
+  // Output object is also accessible in the function as a second parameter
+  // This allows to reuse operations for already converted values
+  // (like mappedSum and convertedNumber, in this example)
+  mappedPlusConverted: (_input, output) => output.mappedSum + output.convertedNumber
 };
 
 /* output */ {
