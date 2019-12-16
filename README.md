@@ -20,7 +20,7 @@ For more options see [installation](#installation)
   - [API](#api)
     - [TypeMap](#typemap)
       - [Examples](#examples)
-      - ["The same key" object/array shorthand](#%22the-same-key%22-objectarray-shorthand)
+      - [&quot;The same key&quot; object/array shorthand](#quotthe-same-keyquot-objectarray-shorthand)
     - [mapFactory](#mapfactory)
       - [Overloads](#overloads)
     - [mapTypes](#maptypes)
@@ -29,10 +29,10 @@ For more options see [installation](#installation)
     - [flattenPromises](#flattenpromises)
     - [Convertable](#convertable)
     - [Convertable class](#convertable-class)
-      - [`constructor`](#constructor)
-      - [`toInput`](#toinput)
-      - [`Convertable.createConverter`](#convertablecreateconverter)
-      - [`Convertable.reverseConverter`](#convertablereverseconverter)
+      - [constructor](#constructor)
+      - [toInput](#toinput)
+      - [Convertable.createConverter](#convertablecreateconverter)
+      - [Convertable.reverseConverter](#convertablereverseconverter)
 
 ---
 
@@ -138,7 +138,10 @@ const TypeMap = {
   // Mapped using a function and also renamed.
   mappedSum: input => input.mapped.reduce((a, b) => a + b),
 
-  mappedPlusConverted: input => input.mapped.reduce((a, b) => a + b) + Number(input.converted)
+  // Output object is also accessible in the function
+  // This allows to re-use operations for already converted values
+  // (like mappedSum, in this example)
+  mappedPlusConverted: (input, output) => output.mappedSum + Number(input.converted)
 };
 
 /* output */ {
