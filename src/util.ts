@@ -3,6 +3,12 @@ export type Converter<
   O extends any = any
 > = (input: I) => O;
 
+export type PropertyFactory<
+  I extends any = any,
+  O extends any = any,
+  key extends keyof O = keyof O
+> = (input: I, output: O) => O[key];
+
 export type EitherField<
   T extends object,
   TKey extends keyof T = keyof T
@@ -32,6 +38,8 @@ export type PropertyConverter<
   R extends O[key] = O[key]
 > = readonly [Converter<I[Extract<key, keyof I>], R>];
 
-export const isConverter = <I, O>(v: any): v is Converter<I, O> => typeof v === 'function';
+export const isFactory = <I, O, key extends keyof O>(
+  v: any
+): v is PropertyFactory<I, O, key> => typeof v === 'function';
 
 export const isPropKey = (v: any): v is never => typeof v === 'string';

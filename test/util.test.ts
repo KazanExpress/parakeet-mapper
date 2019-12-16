@@ -1,11 +1,11 @@
-import { isConverter, isPropKey } from '../src/util';
+import { isFactory, isPropKey } from '../src/util';
 
-test('isConverter', () => {
+test('isFactory', () => {
   const converter = (a) => a;
   const nonconverter = '(a) => a';
 
-  expect(isConverter(converter)).toBe(true);
-  expect(isConverter(nonconverter)).toBe(false);
+  expect(isFactory(converter)).toBe(true);
+  expect(isFactory(nonconverter)).toBe(false);
 });
 
 test('isPropKey', () => {
