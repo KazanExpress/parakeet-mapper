@@ -1,7 +1,7 @@
 {
   "name": "parakeet-mapper",
   "sideEffects": false,
-  "version": "2.3.0",
+  "version": "2.3.1",
   "keywords": [
     "map",
     "transform",
