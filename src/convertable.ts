@@ -1,3 +1,4 @@
+// @ts-nocheck TODO fix for Typescript 4.3.2
 import { Converter } from './util';
 
 export type ConverterFactory<
