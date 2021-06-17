@@ -100,6 +100,8 @@ var parakeetMapper = (function (exports) {
   exports.Convertable = Convertable;
   exports.flattenPromises = flattenPromises;
   exports.wait = wait;
+  exports.isFactory = isFactory;
+  exports.isPropKey = isPropKey;
 
   return exports;
 

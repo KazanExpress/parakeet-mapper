@@ -103,6 +103,8 @@
   exports.Convertable = Convertable;
   exports.flattenPromises = flattenPromises;
   exports.wait = wait;
+  exports.isFactory = isFactory;
+  exports.isPropKey = isPropKey;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 

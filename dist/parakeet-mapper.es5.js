@@ -101,4 +101,6 @@ exports.mapTypes = mapTypes;
 exports.Convertable = Convertable;
 exports.flattenPromises = flattenPromises;
 exports.wait = wait;
+exports.isFactory = isFactory;
+exports.isPropKey = isPropKey;
 //# sourceMappingURL=parakeet-mapper.es5.js.map

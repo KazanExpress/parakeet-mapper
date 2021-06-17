@@ -78,5 +78,5 @@ function wait(convert) {
     return input => flattenPromises(convert(input));
 }
 
-export { mapFactory, mapTypes, Convertable, flattenPromises, wait };
+export { mapFactory, mapTypes, Convertable, flattenPromises, wait, isFactory, isPropKey };
 //# sourceMappingURL=parakeet-mapper.es.js.map
