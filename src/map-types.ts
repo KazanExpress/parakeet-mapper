@@ -1,4 +1,4 @@
-import { TypeMap, InferOutput, mapFactory } from './map-factory';
+import { TypeMap, InferOutput, mapFactory } from './map-factory.js';
 
 export function mapTypes<
   I extends object

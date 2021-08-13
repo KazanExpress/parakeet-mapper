@@ -1,12 +1,12 @@
-import { Converter } from './util';
-export declare type ConverterFactory<M extends any[] = any[], T extends object = any, R extends object = any> = (...args: M) => Converter<T, R>;
-export interface IConvertableConstructor<C extends ConverterFactory, I extends object = ReturnType<C> extends Converter<infer U> ? U : any, R extends object = ReturnType<C> extends Converter<any, infer U> ? U : any, M extends any[] = C extends ConverterFactory<infer U> ? U : any[]> {
+import { Converter } from './util.js';
+export declare type ConverterFactory<M extends any[] = any[], I = any, O = any> = (...args: M) => Converter<I, O>;
+export interface IConvertableConstructor<C extends ConverterFactory, I = ReturnType<C> extends Converter<infer U> ? U : any, O = ReturnType<C> extends Converter<any, infer U> ? U : any, M extends any[] = C extends ConverterFactory<infer U> ? U : any[]> {
     /**
      * Creates an instance of Convertable.
      * @param options main options for converter function (typically, the model from server)
      * @param misc miscellanious arguments for converter function as declared in its definition
      */
-    new (options: I, ...misc: M): R;
+    new (options: I, ...misc: M): O;
     /**
      * the converter factory to use for the convertor generation
      *
@@ -14,13 +14,13 @@ export interface IConvertableConstructor<C extends ConverterFactory, I extends o
      */
     readonly createConverter: C;
 }
-export interface IReverseConvertableConstructor<C extends ConverterFactory, RC extends ConverterFactory<any, R, I>, I extends object = ReturnType<C> extends Converter<infer U> ? U : any, R extends object = ReturnType<C> extends Converter<any, infer U> ? U : any, M extends any[] = C extends ConverterFactory<infer U> ? U : any[], MR extends any[] = RC extends ConverterFactory<infer U> ? U : any[]> extends IConvertableConstructor<C, I, R, M> {
+export interface IReverseConvertableConstructor<C extends ConverterFactory, RC extends ConverterFactory<any, O, I>, I = ReturnType<C> extends Converter<infer U> ? U : any, O = ReturnType<C> extends Converter<any, infer U> ? U : any, M extends any[] = C extends ConverterFactory<infer U> ? U : any[], MR extends any[] = RC extends ConverterFactory<infer U> ? U : any[]> extends IConvertableConstructor<C, I, O, M> {
     /**
      * Creates an instance of Convertable.
      * @param options main options for converter function (typically, the model from server)
      * @param misc miscellanious arguments for converter function as declared in its definition
      */
-    new (options: I, ...misc: M): R;
+    new (options: I, ...misc: M): O;
     /**
      * reverseConverter has the same signature as the `converter`, used for the reverse conversion back to server types
      *
@@ -33,7 +33,7 @@ export interface IReverseConvertableConstructor<C extends ConverterFactory, RC e
      * @param options initially converted output to generate resulting input from
      * @param misc miscellanious arguments for reverseConverter function as declared in its definition
      */
-    toInput(options: R, ...misc: MR): I;
+    toInput(options: O, ...misc: MR): I;
 }
 /**
  * Makes class convertible: adds the ability to convert certain options
@@ -45,7 +45,7 @@ export interface IReverseConvertableConstructor<C extends ConverterFactory, RC e
  *
  * @returns newly generated convertable class
 */
-export declare function Convertable<C extends ConverterFactory, I extends object = ReturnType<C> extends Converter<infer U> ? U : any, R extends object = ReturnType<C> extends Converter<any, infer U> ? U : any, M extends any[] = C extends ConverterFactory<infer U> ? U : any[]>(converter: C): IConvertableConstructor<C, I, R, M>;
+export declare function Convertable<C extends ConverterFactory, I = ReturnType<C> extends Converter<infer U> ? U : any, O = ReturnType<C> extends Converter<any, infer U> ? U : any, M extends any[] = C extends ConverterFactory<infer U> ? U : any[]>(converter: C): IConvertableConstructor<C, I, O, M>;
 /**
  * Makes class convertible: adds the ability to convert certain options
  * to the class using its constructor
@@ -58,4 +58,4 @@ export declare function Convertable<C extends ConverterFactory, I extends object
  *
  * @returns newly generated convertable class
 */
-export declare function Convertable<C extends ConverterFactory, RC extends ConverterFactory<any, R, I>, I extends object = ReturnType<C> extends Converter<infer U> ? U : any, R extends object = ReturnType<C> extends Converter<any, infer U> ? U : any, M extends any[] = C extends ConverterFactory<infer U> ? U : any[], MR extends any[] = RC extends ConverterFactory<infer U> ? U : any[]>(converter: C, reverseConverter: RC): IReverseConvertableConstructor<C, RC, I, R, M, MR>;
+export declare function Convertable<C extends ConverterFactory, RC extends ConverterFactory<any, O, I>, I = ReturnType<C> extends Converter<infer U> ? U : any, O = ReturnType<C> extends Converter<any, infer U> ? U : any, M extends any[] = C extends ConverterFactory<infer U> ? U : any[], MR extends any[] = RC extends ConverterFactory<infer U> ? U : any[]>(converter: C, reverseConverter: RC): IReverseConvertableConstructor<C, RC, I, O, M, MR>;

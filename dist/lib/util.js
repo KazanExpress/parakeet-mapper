@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.isFactory = function (v) { return typeof v === 'function'; };
-exports.isPropKey = function (v) { return typeof v === 'string'; };
+export const isFactory = (v) => typeof v === 'function';
+export const isPropKey = (v) => typeof v === 'string';
 //# sourceMappingURL=util.js.map

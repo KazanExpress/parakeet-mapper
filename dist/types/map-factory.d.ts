@@ -1,4 +1,4 @@
-import { Converter, PropertyMapper, PropertyConverter, PropertyFactory } from './util';
+import { Converter, PropertyMapper, PropertyConverter, PropertyFactory } from './util.js';
 export declare function mapFactory<I extends object, O extends object>(fieldMap: TypeMap<I, O>): Converter<I, O>;
 export declare function mapFactory<I extends object>(): <F extends TypeMap<I>, O extends object = InferOutput<I, F>>(fieldMap: F) => Converter<I, O>;
 export declare function mapFactory<I extends object, O extends object>(): <F extends TypeMap<I, O>, RealO extends object = InferOutput<I, F, O>>(fieldMap: F) => Converter<I, RealO>;

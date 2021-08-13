@@ -2,7 +2,7 @@
   "compilerOptions": {
     "removeComments": false,
     "moduleResolution": "node",
-    "target": "es5",
+    "target": "esnext",
     "module":"es6",
     "lib": ["es2015", "es2016", "es2017", "dom"],
     "strict": true,
@@ -15,6 +15,7 @@
     "noUnusedLocals": true,
     "noImplicitAny": false,
     "strictNullChecks": true,
+    "strictFunctionTypes": true,
     "strictPropertyInitialization": true,
     "declarationDir": "dist/types",
     "outDir": "dist/lib",

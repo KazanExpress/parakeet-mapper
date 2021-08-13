@@ -1,4 +1,4 @@
-import { Converter } from './util';
+import { Converter } from './util.js';
 export declare type StripPromises<O> = {
     [key in keyof O]: O[key] extends Promise<infer OK> ? OK : O[key] extends Array<Promise<infer OK>> ? Array<OK> : O[key];
 };

@@ -1,14 +1,13 @@
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import sourceMaps from 'rollup-plugin-sourcemaps';
-import typescript from 'rollup-plugin-typescript2';
+import typescript from '@rollup/plugin-typescript';
 import { uglify } from 'rollup-plugin-uglify';
 import json from 'rollup-plugin-json';
 
-const libName = 'parakeet-mapper';
 const varName = 'parakeetMapper';
 const input = `src/index.ts`;
-const output = format => `dist/${libName}.${format}.js`;
+const output = format => `dist/${format}.min.js`;
 const common = target => ({
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
   external: [],
@@ -19,16 +18,13 @@ const common = target => ({
     // Allow json resolution
     json(),
     // Compile TypeScript files
-    typescript({ useTsconfigDeclarationDir: true, tsconfigOverride: { compilerOptions: {
-      target
-    } } }),
+    typescript({ target }),
 
     // Allow node_modules resolution, so you can use 'external' to control
     // which external modules to include in the bundle
     // https://github.com/rollup/rollup-plugin-node-resolve#usage
     resolve({
-      module: true,
-      jsnext: true
+      mainFields: ['module', 'main', 'unpkg']
     }),
 
     // Allow bundling cjs modules (unlike webpack, rollup doesn't understand cjs)

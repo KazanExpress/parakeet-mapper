@@ -1,6 +1,6 @@
 # Parakeet Mapper
 
-[![npm](https://img.shields.io/npm/v/parakeet-mapper.svg?style=flat-square)](https://www.npmjs.com/package/parakeet-mapper) 
+[![npm](https://img.shields.io/npm/v/parakeet-mapper.svg?style=flat-square)](https://www.npmjs.com/package/parakeet-mapper)
 [![npm bundle size (minified)](https://img.shields.io/bundlephobia/minzip/parakeet-mapper.svg?style=flat-square)]() [![dependencies (minified)](https://img.shields.io/badge/dependencies-none-yellow.svg?style=flat-square)]()
 
 > Simple data conversion library
@@ -29,10 +29,10 @@ For more options see [installation](#installation)
     - [flattenPromises](#flattenpromises)
     - [Convertable](#convertable)
     - [Convertable class](#convertable-class)
-      - [constructor](#constructor)
-      - [toInput](#toinput)
-      - [Convertable.createConverter](#convertablecreateconverter)
-      - [Convertable.reverseConverter](#convertablereverseconverter)
+      - [`constructor`](#constructor)
+      - [`toInput`](#toinput)
+      - [`Convertable.createConverter`](#convertablecreateconverter)
+      - [`Convertable.reverseConverter`](#convertablereverseconverter)
 
 ---
 
@@ -77,13 +77,15 @@ const { mapTypes, mapFactory } = require('parakeet-mapper');
 **Script tag**
 
 ```html
-<script src="https://unpkg.com/parakeet-mapper"></script>
+<!-- Modern es-modules: -->
+<script>
+  import { mapTypes, mapFactory } from 'https://unpkg.com/parakeet-mapper';
+</script>
 
-...
-
+<!-- Or a legacy IIFE script: -->
+<script src="https://unpkg.com/parakeet-mapper/dist/parakeet-mapper.iife.js"></script>
 <script>
   // global variable parakeetMapper
-
   const { mapTypes, mapFactory } = parakeetMapper;
 </script>
 ```
