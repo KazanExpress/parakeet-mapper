@@ -1,16 +1,15 @@
-// @ts-nocheck TODO fix for Typescript 4.3.2
 import { Converter } from './util';
 
 export type ConverterFactory<
   M extends any[] = any[],
-  T extends object = any,
-  R extends object = any
-> = (...args: M) => Converter<T, R>;
+  I = any,
+  O = any
+> = (...args: M) => Converter<I, O>;
 
 export interface IConvertableConstructor<
   C extends ConverterFactory,
-  I extends object = ReturnType<C> extends Converter<infer U> ? U : any,
-  R extends object = ReturnType<C> extends Converter<any, infer U> ? U : any,
+  I = ReturnType<C> extends Converter<infer U> ? U : any,
+  O = ReturnType<C> extends Converter<any, infer U> ? U : any,
   M extends any[] = C extends ConverterFactory<infer U> ? U : any[]
 > {
   /**
@@ -18,7 +17,7 @@ export interface IConvertableConstructor<
    * @param options main options for converter function (typically, the model from server)
    * @param misc miscellanious arguments for converter function as declared in its definition
    */
-  new (options: I, ...misc: M): R;
+  new (options: I, ...misc: M): O;
 
   /**
    * the converter factory to use for the convertor generation
@@ -30,18 +29,18 @@ export interface IConvertableConstructor<
 
 export interface IReverseConvertableConstructor<
   C extends ConverterFactory,
-  RC extends ConverterFactory<any, R, I>,
-  I extends object = ReturnType<C> extends Converter<infer U> ? U : any,
-  R extends object = ReturnType<C> extends Converter<any, infer U> ? U : any,
+  RC extends ConverterFactory<any, O, I>,
+  I = ReturnType<C> extends Converter<infer U> ? U : any,
+  O = ReturnType<C> extends Converter<any, infer U> ? U : any,
   M extends any[] = C extends ConverterFactory<infer U> ? U : any[],
   MR extends any[] = RC extends ConverterFactory<infer U> ? U : any[]
-> extends IConvertableConstructor<C, I, R, M> {
+> extends IConvertableConstructor<C, I, O, M> {
   /**
    * Creates an instance of Convertable.
    * @param options main options for converter function (typically, the model from server)
    * @param misc miscellanious arguments for converter function as declared in its definition
    */
-  new (options: I, ...misc: M): R;
+  new (options: I, ...misc: M): O;
 
   /**
    * reverseConverter has the same signature as the `converter`, used for the reverse conversion back to server types
@@ -56,7 +55,7 @@ export interface IReverseConvertableConstructor<
    * @param options initially converted output to generate resulting input from
    * @param misc miscellanious arguments for reverseConverter function as declared in its definition
    */
-  toInput(options: R, ...misc: MR): I;
+  toInput(options: O, ...misc: MR): I;
 }
 
 /**
@@ -71,10 +70,10 @@ export interface IReverseConvertableConstructor<
 */
 export function Convertable<
   C extends ConverterFactory,
-  I extends object = ReturnType<C> extends Converter<infer U> ? U : any,
-  R extends object = ReturnType<C> extends Converter<any, infer U> ? U : any,
+  I = ReturnType<C> extends Converter<infer U> ? U : any,
+  O = ReturnType<C> extends Converter<any, infer U> ? U : any,
   M extends any[] = C extends ConverterFactory<infer U> ? U : any[]
->(converter: C): IConvertableConstructor<C, I, R, M>;
+>(converter: C): IConvertableConstructor<C, I, O, M>;
 
 /**
  * Makes class convertible: adds the ability to convert certain options
@@ -90,20 +89,20 @@ export function Convertable<
 */
 export function Convertable<
   C extends ConverterFactory,
-  RC extends ConverterFactory<any, R, I>,
-  I extends object = ReturnType<C> extends Converter<infer U> ? U : any,
-  R extends object = ReturnType<C> extends Converter<any, infer U> ? U : any,
+  RC extends ConverterFactory<any, O, I>,
+  I = ReturnType<C> extends Converter<infer U> ? U : any,
+  O = ReturnType<C> extends Converter<any, infer U> ? U : any,
   M extends any[] = C extends ConverterFactory<infer U> ? U : any[],
   MR extends any[] = RC extends ConverterFactory<infer U> ? U : any[]
->(converter: C, reverseConverter: RC): IReverseConvertableConstructor<C, RC, I, R, M, MR>;
+>(converter: C, reverseConverter: RC): IReverseConvertableConstructor<C, RC, I, O, M, MR>;
 
 export function Convertable<
   C extends ConverterFactory,
-  I extends object = ReturnType<C> extends Converter<infer U> ? U : any,
-  R extends object = ReturnType<C> extends Converter<any, infer U> ? U : any,
+  I = ReturnType<C> extends Converter<infer U> ? U : any,
+  O = ReturnType<C> extends Converter<any, infer U> ? U : any,
   M extends any[] = C extends ConverterFactory<infer U> ? U : any[],
 
-  RC extends ConverterFactory<any, R, I> = never,
+  RC extends ConverterFactory<any, O, I> = never,
   MR extends any[] = RC extends ConverterFactory<infer U> ? U : never
 >(converter: C, reverseConverter?: RC) {
   class Convertable {
@@ -115,7 +114,7 @@ export function Convertable<
       }
     }
 
-    public static toInput = reverseConverter ? <Obj extends R>(options: Obj, ...misc: MR) => (
+    public static toInput = reverseConverter ? <Obj extends O>(options: Obj, ...misc: MR) => (
       reverseConverter(...misc)(options)
      ) : undefined;
 

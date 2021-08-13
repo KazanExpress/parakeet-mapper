@@ -10,21 +10,21 @@ export type PropertyFactory<
 > = (input: I, output: O) => O[key];
 
 export type EitherField<
-  T extends object,
+  T,
   TKey extends keyof T = keyof T
 > = TKey extends keyof T ? {
   [P in TKey]-?: T[TKey]
 } & Partial<Record<Exclude<keyof T, TKey>, never>> : never;
 
 export type InternalPropertyMapper<
-  I extends object,
-  O extends object,
+  I,
+  O,
   key extends keyof O
 > = { [IKey in keyof I]: Converter<I[IKey], O[key]> };
 
 export type PropertyMapper<
-  I extends object,
-  O extends object,
+  I,
+  O,
   key extends keyof O,
   ikey extends keyof I = Extract<key, keyof I>
 > = EitherField<Partial<InternalPropertyMapper<I, O, key>>> | (ikey extends keyof I ? {
@@ -32,8 +32,8 @@ export type PropertyMapper<
 } : never);
 
 export type PropertyConverter<
-  I extends object,
-  O extends object,
+  I,
+  O,
   key extends keyof O,
   R extends O[key] = O[key]
 > = readonly [Converter<I[Extract<key, keyof I>], R>];
