@@ -1,11 +1,6 @@
-"use strict";
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
-Object.defineProperty(exports, "__esModule", { value: true });
-__export(require("./map-factory"));
-__export(require("./map-types"));
-__export(require("./convertable"));
-__export(require("./wait"));
-__export(require("./util"));
+export * from './map-factory.js';
+export * from './map-types.js';
+export * from './convertable.js';
+export * from './wait.js';
+export * from './util.js';
 //# sourceMappingURL=index.js.map

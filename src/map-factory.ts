@@ -5,7 +5,7 @@ import {
   PropertyMapper,
   PropertyConverter,
   PropertyFactory
-} from './util';
+} from './util.js';
 
 export function mapFactory<
   I extends object,

@@ -1,4 +1,4 @@
-import { Converter } from './util';
+import { Converter } from './util.js';
 
 export type ConverterFactory<
   M extends any[] = any[],
